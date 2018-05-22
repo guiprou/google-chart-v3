@@ -6,4 +6,5 @@
   from HTML and may be out of place here. Review them and
   then delete this comment!
 */
+import 'https://www.gstatic.com/charts/loader.js';
 ;
