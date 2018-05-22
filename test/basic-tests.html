@@ -14,7 +14,7 @@
   <script src="../../web-component-tester/browser.js"></script>
 
   <link rel="import" href="../../promise-polyfill/promise-polyfill-lite.html">
-  <script type="module" src="../google-chart.js"></script>
+  <link rel="import" href="../google-chart.html">
 </head>
 
 <body>
@@ -25,8 +25,7 @@
   </template>
 </test-fixture>
 
-<script type="module">
-import '../google-chart.js';
+<script>
 suite('<google-chart>', function() {
   var chart;
   setup(function() {
