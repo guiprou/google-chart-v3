@@ -59,6 +59,7 @@ on the `html` tag of your document.
 import '../../@polymer/polymer/polymer-legacy.js';
 
 import '../../@polymer/iron-ajax/iron-request.js';
+import '../../@polymer/google-apis/google-js-apis.js';
 import './google-chart-loader.js';
 import './google-chart-styles.js';
 import { Polymer } from '../../@polymer/polymer/lib/legacy/polymer-fn.js';

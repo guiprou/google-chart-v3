@@ -26,9 +26,9 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
+    "@polymer/google-apis": "https://github.com/guiprou/google-apis-v3.git",
     "@polymer/iron-ajax": "^3.0.0-pre.18",
-    "@polymer/polymer": "^3.0.0",
-    "google-apis": "GoogleWebComponents/google-apis"
+    "@polymer/polymer": "^3.0.0"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^3.0.0-pre.18",
