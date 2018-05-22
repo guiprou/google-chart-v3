@@ -6,8 +6,8 @@
   <title>google-chart Demo</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../promise-polyfill/promise-polyfill-lite.html">
-  <link rel="import" href="../google-chart.html">
+  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>se-polyfill-lite.js"></script>
+  <script type="module" src="../google-chart.js"></script>
   <style>
     code {
       color: #007000;
@@ -66,14 +66,15 @@
 
   <p>Here's a chart that changes data every 3 seconds:</p>
 
-  <google-chart
-    id="mutating-chart"
-    type="column"
-    options='{"title": "Random data",
-              "vAxis": {"minValue" : 0, "maxValue": 10},
-              "animation": {"duration": "1000"}}'
-    cols='[{"label": "Data", "type": "string"},{"label": "Value", "type": "number"}]'
-    rows='[ ["Col1", 5.0],["Col2", 5.0],["Col3", 5.0] ]'>
+  <script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+var media = window.matchMedia('(min-width: 1024px)');
+
+media.addListener(function() {
+  document.getElementById('resizing-chart').redraw();
+});
+</script> ["Col1", 5.0],["Col2", 5.0],["Col3", 5.0] ]'>
   </google-chart>
 
   <script>
@@ -90,23 +91,21 @@
                       ["Col3", getRandomValue()]];
       }, 3000);
     }());
-  </script>
+  <script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+function getRandomValue() {
+  return Math.random() * 10;
+}
 
-  <p>Here's a pie chart with an area selection:</p>
+var chart = document.getElementById('mutating-chart');
 
-  <style>
-    #selection-demo {
-      position: relative;
-      height: 300px;
-    }
-
-    #selection-chart {
-      float: left;
-    }
-
-    #selection-display {
-      display: inline-block;
-      position: relative;
+window.setInterval(function() {
+  chart.rows = [["Col1", getRandomValue()],
+                ["Col2", getRandomValue()],
+                ["Col3", getRandomValue()]];
+}, 3000);
+</script>ion: relative;
       top: 50%;
     }
   </style>
@@ -145,27 +144,24 @@
 
   <p>Here's a pie chart listening for `onmouseover`:</p>
 
-  <style>
-    #mouseover-demo {
-      position: relative;
-      height: 300px;
-    }
+  <script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+var chart = document.getElementById('selection-chart');
+var label = document.getElementById('selection-label');
 
-    #mouseover-chart {
-      float: left;
-    }
+label.textContent = chart.selection[0].row;
 
-    #mouseover-display {
-      display: inline-block;
-      position: relative;
-      top: 50%;
-    }
-  </style>
-  <div id="mouseover-demo">
-    <google-chart
-      id="mouseover-chart"
-      type="pie"
-      options='{"title": "Distribution of days in 2001H1"}'
+chart.addEventListener('google-chart-select', function(e) {
+  var newSelection = e.detail.chart.getSelection()[0];  // From the event details
+  label.textContent = newSelection ? newSelection.row : 'None';
+});
+
+chart.addEventListener('selection-changed', function(e) {
+  var newSelection = e.detail.value[0];  // From the event details
+  label.textContent = newSelection ? newSelection.row : 'None';
+});
+</script>ns='{"title": "Distribution of days in 2001H1"}'
       cols='[{"label": "Month", "type": "string"},{"label": "Days", "type": "number"}]'
       rows='[ ["Jan", 31],["Feb", 28],["Mar", 31],["Apr", 30],["May", 31],["Jun", 30] ]'
       events='["onmouseover"]'>
@@ -204,17 +200,16 @@
     type="column"
     options='{"title": "Bar height", "legend": "none"}'
     data="chart-data.json">
-  </google-chart>
+  <script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+var chart = document.getElementById('mouseover-chart');
+var label = document.getElementById('mouseover-label');
 
-  <p>Website traffic data by country from an external JSON resource where the data is in raw DataTable format.</p>
-
-  <google-chart
-    type="column"
-    options='{"title": "Visitors by Country", "legend": "none"}'
-    data="country-data.json">
-  </google-chart>
-
-  <h2>Chart gallery</h2>
+chart.addEventListener('google-chart-onmouseover', function(e) {
+  label.textContent = e.detail.data.row;
+});
+</script> gallery</h2>
 
   <p>Here's an area chart:</p>
 
@@ -506,20 +501,19 @@
 
       var gauge = document.getElementById('mutating-gauge');
 
-      window.setInterval(function() {
-        gauge.data = [
-          ['Label', 'Value'],
-          ['Memory', getRandomGaugeValue(40, 60)],
-          ['CPU', getRandomGaugeValue(40, 60)],
-          ['Network', getRandomGaugeValue(60, 20)]
-        ];
-      }, 3000);
-    }());
-  </script>
-
-  <p>Here's a treemap:</p>
-
-  <google-chart
+  <script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+var chart = document.getElementById('timeline');
+document.createElement('google-chart-loader').dataTable([
+  ['Name', 'Start', 'End'],
+  ['Washington', new Date(1789, 3, 30), new Date(1797, 2, 4)],
+  ['Adams', new Date(1797, 2, 4), new Date(1801, 2, 4)],
+  ['Jefferson', new Date(1801, 2, 4), new Date(1809, 2, 4)]
+]).then(function(dataTable) {
+  chart.data = dataTable;
+});
+</script>-chart
       type="treemap"
       options='{"showScale": true, "maxPostDepth": 2}'
       data='[["Location", "Parent", "Value"],
@@ -581,26 +575,24 @@
       type="bar">
   </google-chart>
 
-  <p>DataViews can be altered, but you'll need to call the <code>redraw</code> method afterward.</p>
+  <script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+function getRandomGaugeValue(offset, factor) {
+  return offset + Math.round(factor * Math.random());
+}
 
-  <script>
-    (function() {
-      var chart = document.getElementById('source-dataview');
-      var loader = document.createElement('google-chart-loader');
-      loader.dataTable([
-        ['Label', 'Value'],
-        ['Memory', 10],
-        ['CPU', 12],
-        ['Network', 14]
-      ]).then(function(dataTable) {
-        loader.dataView(dataTable).then(function(dataView) {
-          chart.view = dataView;
-          var setRandomRow = function() {
-            var rowCount = dataTable.getNumberOfRows();
-            var row = Math.floor(Math.random() * rowCount);
-            var row2 = (row + 1) % rowCount;
-            chart.view.setRows([row, row2]);
-            chart.redraw();
+var gauge = document.getElementById('mutating-gauge');
+
+window.setInterval(function() {
+  gauge.data = [
+    ['Label', 'Value'],
+    ['Memory', getRandomGaugeValue(40, 60)],
+    ['CPU', getRandomGaugeValue(40, 60)],
+    ['Network', getRandomGaugeValue(60, 20)]
+  ];
+}, 3000);
+</script> chart.redraw();
           };
           setInterval(setRandomRow, 3000);
         });
@@ -625,3 +617,48 @@
 
 </body>
 </html>
+<script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+var chart = document.getElementById('line-chart');
+var img = document.getElementById('line-chart-img');
+
+chart.addEventListener('google-chart-ready', function() {
+  img.src = chart.imageURI;
+});
+</script><script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+var chart = document.getElementById('source-dataview');
+var loader = document.createElement('google-chart-loader');
+loader.dataTable([
+  ['Label', 'Value'],
+  ['Memory', 10],
+  ['CPU', 12],
+  ['Network', 14]
+]).then(function(dataTable) {
+  loader.dataView(dataTable).then(function(dataView) {
+    chart.view = dataView;
+    var setRandomRow = function() {
+      var rowCount = dataTable.getNumberOfRows();
+      var row = Math.floor(Math.random() * rowCount);
+      var row2 = (row + 1) % rowCount;
+      chart.view.setRows([row, row2]);
+      chart.redraw();
+    };
+    setInterval(setRandomRow, 3000);
+  });
+});
+</script><script type="module">
+import '../../../@polymer/promise-polyfill/promise-polyfill-lite.js';
+import '../google-chart.js';
+var chart = document.getElementById('source-datatable');
+document.createElement('google-chart-loader').dataTable([
+  ['Label', 'Value'],
+  ['Memory', 10],
+  ['CPU', 12],
+  ['Network', 14]
+]).then(function(dataTable) {
+  chart.data = dataTable;
+});
+</script>
